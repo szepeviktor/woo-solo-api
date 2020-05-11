@@ -14,7 +14,7 @@ jobs:
             matrix:
                 php: [7.2, 7.3, 7.4]
 
-        name: PHPCS ${{ matrix.php }} checks
+        name: PHPCS check on PHP ${{ matrix.php }}
         steps:
             # Checkout repository
             - name: Checkout
@@ -22,7 +22,7 @@ jobs:
 
             # Setup PHP versions, run checks
             - name: PHP Setup
-              uses: shivammathur/setup-php@2
+              uses: shivammathur/setup-php@v2
               with:
                 php-version: ${{ matrix.php }}
                 coverage: pcov
@@ -41,7 +41,7 @@ jobs:
               uses: actions/checkout@v2
 
             - name: PHP Setup
-              uses: shivammathur/setup-php@2
+              uses: shivammathur/setup-php@v2
               with:
                 php-version: 7.2
                 coverage: pcov
@@ -69,7 +69,7 @@ jobs:
               uses: actions/checkout@v2
 
             - name: PHP Setup
-              uses: shivammathur/setup-php@2
+              uses: shivammathur/setup-php@v2
               with:
                 php-version: 7.2
                 coverage: pcov
@@ -88,7 +88,7 @@ jobs:
                 wp core download
                 wp config create --dbname=$TEST_DB_NAME --dbuser=$TEST_DB_USER
                 wp core install --url=$TEST_SITE_WP_URL --title=Test --admin_user=$TEST_SITE_ADMIN_USERNAME --admin_password=$TEST_SITE_ADMIN_PASSWORD --admin_email=$TEST_SITE_ADMIN_EMAIL
-                ls --all 
+                ls --all
                 pwd
               env:
                 WP_ROOT_FOLDER: "/var/www/html"
