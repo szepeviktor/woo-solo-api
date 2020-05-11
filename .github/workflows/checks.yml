@@ -54,10 +54,10 @@ jobs:
 
     tests:
         services:
-            mariadb:
+            mysql:
                 image: mysql:5.7
                 ports:
-                    - 3306
+                    - 32574:3306
                 env:
                     MYSQL_ROOT_PASSWORD: password
                 options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -67,9 +67,8 @@ jobs:
         steps:
             - name: Verify MySQL connection from host
               run: |
-                sudo apt-get update
                 sudo apt-get install -y mysql-client
-                mysql --host mydb -uroot -ppassword -e "SHOW DATABASES"
+                mysql --host 127.0.0.1 --port 32574 -uroot -ppassword -e "SHOW DATABASES"
 
             - name: Checkout
               uses: actions/checkout@v2
@@ -103,7 +102,7 @@ jobs:
                 TEST_SITE_DB_NAME: "wordpresstest"
                 TEST_SITE_DB_HOST: "localhost"
                 TEST_SITE_DB_USER: "root"
-                TEST_SITE_DB_PORT: ${{ job.services.mysql.ports[3306] }}
+                TEST_SITE_DB_PORT: "32574"
                 TEST_SITE_DB_PASSWORD: ""
                 TEST_SITE_TABLE_PREFIX: "wp_"
                 TEST_TABLE_PREFIX: "wp_"
@@ -116,7 +115,7 @@ jobs:
                 TEST_DB_HOST: "localhost"
                 TEST_DB_USER: "root"
                 TEST_DB_PASSWORD: ""
-                TEST_DB_PORT: ${{ job.services.mysql.ports[3306] }}
+                TEST_DB_PORT: "32574"
 
             - name: Install composer packages
               run: composer install --no-progress
