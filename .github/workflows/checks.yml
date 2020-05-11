@@ -55,16 +55,22 @@ jobs:
     tests:
         services:
             mariadb:
-                image: mariadb
+                image: mysql:5.7
                 ports:
                     - 3306
                 env:
-                    MYSQL_ROOT_PASSWORD: root
+                    MYSQL_ROOT_PASSWORD: password
                 options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
         runs-on: ubuntu-latest
 
-        name: Integration tests on version ${{ matrix.php }}
+        name: Integration tests
         steps:
+            - name: Verify MySQL connection from host
+              run: |
+                apt-get update
+                apt-get install -y mysql-client
+                mysql --host mydb -uroot -ppassword -e "SHOW DATABASES"
+
             - name: Checkout
               uses: actions/checkout@v2
 
