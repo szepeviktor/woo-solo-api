@@ -65,28 +65,6 @@ jobs:
 
         name: Integration tests on version ${{ matrix.php }}
         steps:
-            - shell: bash
-              env:
-                WP_ROOT_FOLDER: "/var/www/html"
-                TEST_SITE_WP_ADMIN_PATH: "/wp-admin"
-                TEST_SITE_DB_NAME: "wordpresstest"
-                TEST_SITE_DB_HOST: "localhost"
-                TEST_SITE_DB_USER: "root"
-                TEST_SITE_DB_PORT: ${{ job.services.mysql.ports[3306] }}
-                TEST_SITE_DB_PASSWORD: ""
-                TEST_SITE_TABLE_PREFIX: "wp_"
-                TEST_TABLE_PREFIX: "wp_"
-                TEST_SITE_WP_URL: "http://wordpress.test"
-                TEST_SITE_WP_DOMAIN: "wordpress.test"
-                TEST_SITE_ADMIN_EMAIL: "admin@local.test"
-                TEST_SITE_ADMIN_USERNAME: "admin"
-                TEST_SITE_ADMIN_PASSWORD: "password"
-                TEST_DB_NAME: "wordpresstest"
-                TEST_DB_HOST: "localhost"
-                TEST_DB_USER: "root"
-                TEST_DB_PASSWORD: ""
-                TEST_DB_PORT: ${{ job.services.mysql.ports[3306] }}
-
             - name: Checkout
               uses: actions/checkout@v2
 
@@ -110,43 +88,28 @@ jobs:
                 wp core download
                 wp config create --dbname=$TEST_DB_NAME --dbuser=$TEST_DB_USER
                 wp core install --url=$TEST_SITE_WP_URL --title=Test --admin_user=$TEST_SITE_ADMIN_USERNAME --admin_password=$TEST_SITE_ADMIN_PASSWORD --admin_email=$TEST_SITE_ADMIN_EMAIL
-
-            - name: Install composer packages
-              run: composer install --no-progress
-
-            - name: Install node packages
-              run: npm install
-
-            - name: Run integration tests
-              run: composer test:integration
-
-    tests_coverage:
-        runs-on: ubuntu-latest
-
-        name: Code coverage generation
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v2
-
-            - name: Setup PHP, run code coverage
+                ls --all 
+                pwd
               env:
-                CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-              uses: shivammathur/setup-php@2
-              with:
-                php-version: 7.2
-                coverage: pcov
-
-            - name: Set Node.js version
-              uses: actions/setup-node@v1
-              with:
-                node-version: 14
-
-            - name: Set up WordPress instance so that we can run tests
-              run: |
-                curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-                chmod +x wp-cli.phar
-                sudo mv wp-cli.phar /usr/local/bin/wp
-                wp core download
+                WP_ROOT_FOLDER: "/var/www/html"
+                TEST_SITE_WP_ADMIN_PATH: "/wp-admin"
+                TEST_SITE_DB_NAME: "wordpresstest"
+                TEST_SITE_DB_HOST: "localhost"
+                TEST_SITE_DB_USER: "root"
+                TEST_SITE_DB_PORT: ${{ job.services.mysql.ports[3306] }}
+                TEST_SITE_DB_PASSWORD: ""
+                TEST_SITE_TABLE_PREFIX: "wp_"
+                TEST_TABLE_PREFIX: "wp_"
+                TEST_SITE_WP_URL: "http://wordpress.test"
+                TEST_SITE_WP_DOMAIN: "wordpress.test"
+                TEST_SITE_ADMIN_EMAIL: "admin@local.test"
+                TEST_SITE_ADMIN_USERNAME: "admin"
+                TEST_SITE_ADMIN_PASSWORD: "password"
+                TEST_DB_NAME: "wordpresstest"
+                TEST_DB_HOST: "localhost"
+                TEST_DB_USER: "root"
+                TEST_DB_PASSWORD: ""
+                TEST_DB_PORT: ${{ job.services.mysql.ports[3306] }}
 
             - name: Install composer packages
               run: composer install --no-progress
@@ -156,6 +119,3 @@ jobs:
 
             - name: Run integration tests
               run: composer test:integration
-
-            - name: Push coverage report to codecov
-              run: bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN
