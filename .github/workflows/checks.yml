@@ -65,11 +65,6 @@ jobs:
 
         name: Integration tests
         steps:
-            - name: Verify MySQL connection from host
-              run: |
-                sudo apt-get install -y mysql-client
-                mysql --host 127.0.0.1 --port 32574 -uroot -ppassword -e "SHOW DATABASES"
-
             - name: Checkout
               uses: actions/checkout@v2
 
@@ -88,11 +83,12 @@ jobs:
             - name: Set up WordPress instance so that we can run tests
               run: |
                 sudo systemctl start mysql
+                mysql --host 127.0.0.1 --port 32574 -uroot -ppassword -e "CREATE DATABASE `wordpresstest`;"
                 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
                 chmod +x wp-cli.phar
                 sudo mv wp-cli.phar /usr/local/bin/wp
                 wp core download
-                wp config create --dbname=$TEST_DB_NAME --dbuser=$TEST_DB_USER
+                wp config create --dbname=$TEST_DB_NAME --dbuser=$TEST_DB_USER --dbpass=$TEST_DB_PASSWORD
                 wp core install --url=$TEST_SITE_WP_URL --title=Test --admin_user=$TEST_SITE_ADMIN_USERNAME --admin_password=$TEST_SITE_ADMIN_PASSWORD --admin_email=$TEST_SITE_ADMIN_EMAIL
                 ls --all
                 pwd
@@ -102,8 +98,8 @@ jobs:
                 TEST_SITE_DB_NAME: "wordpresstest"
                 TEST_SITE_DB_HOST: "localhost"
                 TEST_SITE_DB_USER: "root"
+                TEST_SITE_DB_PASSWORD: "password"
                 TEST_SITE_DB_PORT: "32574"
-                TEST_SITE_DB_PASSWORD: ""
                 TEST_SITE_TABLE_PREFIX: "wp_"
                 TEST_TABLE_PREFIX: "wp_"
                 TEST_SITE_WP_URL: "http://wordpress.test"
@@ -114,7 +110,7 @@ jobs:
                 TEST_DB_NAME: "wordpresstest"
                 TEST_DB_HOST: "localhost"
                 TEST_DB_USER: "root"
-                TEST_DB_PASSWORD: ""
+                TEST_DB_PASSWORD: "password"
                 TEST_DB_PORT: "32574"
 
             - name: Install composer packages
