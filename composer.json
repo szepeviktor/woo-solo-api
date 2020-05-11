@@ -39,7 +39,7 @@
 		"phpunit/phpunit": "^7.0",
 		"roave/security-advisories": "dev-master",
 		"squizlabs/php_codesniffer": "^3.5.0",
-		"szepeviktor/phpstan-wordpress": "^0.2.0"
+		"szepeviktor/phpstan-wordpress": "^0.6.0"
 	},
 	"autoload-dev": {
 		"psr-4": {
@@ -60,7 +60,7 @@
 	"scripts": {
 		"standards:check": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs",
 		"standards:fix": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf",
-		"analyse": "@php ./vendor/bin/phpstan analyze",
+		"analyze": "@php ./vendor/bin/phpstan analyze",
 		"selenium:start": "selenium-server -port 4444",
     	"chrome:start" : "chromedriver --url-base=/wd/hub",
 		"test:prepare": "@php ./vendor/bin/pcov clobber",
