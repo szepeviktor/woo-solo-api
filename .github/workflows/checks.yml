@@ -91,7 +91,7 @@ jobs:
                 ls --all
                 pwd
                 wp core download
-                wp config create --dbname=$TEST_DB_NAME --dbuser=$TEST_DB_USER --dbpass=$TEST_DB_PASSWORD
+                wp config create --dbname=$TEST_DB_NAME --dbhost=$TEST_DB_HOST --dbuser=$TEST_DB_USER --dbpass=$TEST_DB_PASSWORD
                 wp core install --url=$TEST_SITE_WP_URL --title=Test --admin_user=$TEST_SITE_ADMIN_USERNAME --admin_password=$TEST_SITE_ADMIN_PASSWORD --admin_email=$TEST_SITE_ADMIN_EMAIL
                 yes | cp .env.actions.testing .env.testing
               env:
