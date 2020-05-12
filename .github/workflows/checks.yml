@@ -8,13 +8,13 @@ on:
 
 jobs:
     phpcs_check:
+        name: PHPCS check on PHP ${{ matrix.php }}
         runs-on: ubuntu-latest
         strategy:
             fail-fast: false
             matrix:
                 php: [7.2, 7.3, 7.4]
 
-        name: PHPCS check on PHP ${{ matrix.php }}
         steps:
             # Checkout repository
             - name: Checkout
@@ -34,8 +34,8 @@ jobs:
               run: composer standards:check -- --runtime-set testVersion ${{ matrix.php }}-
 
     phpstan:
+        name: PHPStan check
         runs-on: ubuntu-latest
-        name: phpstan check
         steps:
             - name: Checkout
               uses: actions/checkout@v2
@@ -53,19 +53,23 @@ jobs:
               run: composer analyze
 
     tests:
+        name: Integration tests
         runs-on: ubuntu-latest
 
         services:
             mysql:
                 image: mysql:5.7
                 ports:
-                    - 33306:3306
+                    - 3306
+                volumes:
+                    - $HOME/mysql:/var/lib/mysql
                 env:
-                    MYSQL_ROOT_PASSWORD: password
+                    MYSQL_ALLOW_EMPTY_PASSWORD: yes
                     MYSQL_DATABASE: wordpresstest
+                    MYSQL_USER: root
+                    MYSQL_PASSWORD: password
                 options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
-        name: Integration tests
         steps:
             - name: Checkout
               uses: actions/checkout@v2
@@ -80,6 +84,12 @@ jobs:
               uses: actions/setup-node@v1
               with:
                 node-version: 14
+
+            - name: Install composer packages
+              run: composer install --no-progress
+
+            - name: Install node packages
+              run: npm install
 
             # Setup WordPress so that we can run tests
             - name: Set up WordPress instance so that we can run tests
@@ -114,11 +124,6 @@ jobs:
                 TEST_DB_PASSWORD: "password"
                 TEST_DB_PORT: "33306"
 
-            - name: Install composer packages
-              run: composer install --no-progress
-
-            - name: Install node packages
-              run: npm install
 
             - name: Run integration tests
               run: composer test:integration
