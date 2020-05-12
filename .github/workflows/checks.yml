@@ -53,15 +53,17 @@ jobs:
               run: composer analyze
 
     tests:
+        runs-on: ubuntu-latest
+
         services:
             mysql:
                 image: mysql:5.7
                 ports:
-                    - 32574:3306
+                    - 33306:3306
                 env:
                     MYSQL_ROOT_PASSWORD: password
+                    MYSQL_DATABASE: wordpresstest
                 options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-        runs-on: ubuntu-latest
 
         name: Integration tests
         steps:
@@ -83,23 +85,23 @@ jobs:
             - name: Set up WordPress instance so that we can run tests
               run: |
                 sudo systemctl start mysql
-                mysql --host 127.0.0.1 --port 32574 -uroot -ppassword -e "CREATE DATABASE wordpresstest"
                 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
                 chmod +x wp-cli.phar
                 sudo mv wp-cli.phar /usr/local/bin/wp
+                ls --all
+                pwd
                 wp core download
                 wp config create --dbname=$TEST_DB_NAME --dbuser=$TEST_DB_USER --dbpass=$TEST_DB_PASSWORD
                 wp core install --url=$TEST_SITE_WP_URL --title=Test --admin_user=$TEST_SITE_ADMIN_USERNAME --admin_password=$TEST_SITE_ADMIN_PASSWORD --admin_email=$TEST_SITE_ADMIN_EMAIL
-                ls --all
-                pwd
+                yes | cp .env.actions.testing .env.testing
               env:
                 WP_ROOT_FOLDER: "/var/www/html"
                 TEST_SITE_WP_ADMIN_PATH: "/wp-admin"
                 TEST_SITE_DB_NAME: "wordpresstest"
-                TEST_SITE_DB_HOST: "localhost"
+                TEST_SITE_DB_HOST: "127.0.0.1"
                 TEST_SITE_DB_USER: "root"
                 TEST_SITE_DB_PASSWORD: "password"
-                TEST_SITE_DB_PORT: "32574"
+                TEST_SITE_DB_PORT: "33306"
                 TEST_SITE_TABLE_PREFIX: "wp_"
                 TEST_TABLE_PREFIX: "wp_"
                 TEST_SITE_WP_URL: "http://wordpress.test"
@@ -108,10 +110,10 @@ jobs:
                 TEST_SITE_ADMIN_USERNAME: "admin"
                 TEST_SITE_ADMIN_PASSWORD: "password"
                 TEST_DB_NAME: "wordpresstest"
-                TEST_DB_HOST: "localhost"
+                TEST_DB_HOST: "127.0.0.1"
                 TEST_DB_USER: "root"
                 TEST_DB_PASSWORD: "password"
-                TEST_DB_PORT: "32574"
+                TEST_DB_PORT: "33306"
 
             - name: Install composer packages
               run: composer install --no-progress
