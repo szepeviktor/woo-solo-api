@@ -74,7 +74,7 @@ jobs:
               uses: actions/checkout@v2
 
             - name: Run tests
-              uses: dingo-d/plugin-test-action@v1
+              uses: dingo-d/plugin-test-action@v1.0.1
               with:
                 wp-db-name: 'wordpresstest'
                 wp-db-user: 'admin'
