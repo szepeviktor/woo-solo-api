@@ -27,6 +27,17 @@ jobs:
                 php-version: ${{ matrix.php }}
                 coverage: pcov
 
+            - name: Get Composer Cache Directory
+              id: composer-cache
+              run: |
+                echo "::set-output name=dir::$(composer config cache-files-dir)"
+            - uses: actions/cache@v1
+              with:
+                path: ${{ steps.composer-cache.outputs.dir }}
+                key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+                restore-keys: |
+                  ${{ runner.os }}-composer-
+
             - name: Install composer packages
               run: composer install --no-progress
 
@@ -64,10 +75,10 @@ jobs:
                 volumes:
                     - $HOME/mysql:/var/lib/mysql
                 env:
-                    MYSQL_ALLOW_EMPTY_PASSWORD: yes
-                    MYSQL_DATABASE: wordpresstest
-                    MYSQL_USER: root
-                    MYSQL_PASSWORD: password
+                    MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+                    MYSQL_DATABASE: "wordpresstest"
+                    MYSQL_USER: "root"
+                    MYSQL_PASSWORD: "password"
                 options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
         steps:
@@ -85,11 +96,24 @@ jobs:
               with:
                 node-version: 14
 
+            - name: Cache node modules
+              uses: actions/cache@v1
+              with:
+                path: node_modules
+                key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
+                restore-keys: |
+                  ${{ runner.OS }}-build-${{ env.cache-name }}-
+                  ${{ runner.OS }}-build-
+                  ${{ runner.OS }}-
+
             - name: Install composer packages
               run: composer install --no-progress
 
             - name: Install node packages
               run: npm install
+
+            - name: Run JS build
+              run: npm run build
 
             # Setup WordPress so that we can run tests
             - name: Set up WordPress instance so that we can run tests
