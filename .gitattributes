@@ -3,7 +3,6 @@
 # This will also make them unavailable when using Composer with `--prefer-dist`.
 # https://blog.madewithlove.be/post/gitattributes/
 #
-/.docker export-ignore
 /.editorconfig export-ignore
 /.env.testing export-ignore
 /.env.actions.testing export-ignore
