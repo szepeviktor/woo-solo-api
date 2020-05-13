@@ -154,8 +154,8 @@ jobs:
                 TEST_SITE_DB_NAME: ${{ job.services.mysql.env.MYSQL_DATABASE }}
                 TEST_SITE_DB_HOST: "127.0.0.1"
                 TEST_SITE_DB_USER: "admin"
-                TEST_SITE_DB_PASSWORD: ${{ job.services.mysql.env.MYSQL_PASSWORD }}
-                TEST_SITE_DB_PORT: ${{ job.services.mysql.ports[3306] }}
+                TEST_SITE_DB_PASSWORD: "password"
+                TEST_SITE_DB_PORT: "3306"
                 TEST_SITE_TABLE_PREFIX: "wp_"
                 TEST_TABLE_PREFIX: "wp_"
                 TEST_SITE_WP_URL: "http://wordpress.test"
@@ -166,8 +166,8 @@ jobs:
                 TEST_DB_NAME: ${{ job.services.mysql.env.MYSQL_DATABASE }}
                 TEST_DB_HOST: "127.0.0.1"
                 TEST_DB_USER: "admin"
-                TEST_DB_PASSWORD: ${{ job.services.mysql.env.MYSQL_PASSWORD }}
-                TEST_DB_PORT: ${{ job.services.mysql.ports[3306] }}
+                TEST_DB_PASSWORD: "password"
+                TEST_DB_PORT: "3306"
 
             - name: Run integration tests
               run: composer test:integration
