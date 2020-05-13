@@ -153,7 +153,7 @@ jobs:
                 TEST_SITE_WP_ADMIN_PATH: "/wp-admin"
                 TEST_SITE_DB_NAME: ${{ job.services.mysql.env.MYSQL_DATABASE }}
                 TEST_SITE_DB_HOST: "127.0.0.1"
-                TEST_SITE_DB_USER: ${{ job.services.mysql.env.MYSQL_USER }}
+                TEST_SITE_DB_USER: "admin"
                 TEST_SITE_DB_PASSWORD: ${{ job.services.mysql.env.MYSQL_PASSWORD }}
                 TEST_SITE_DB_PORT: ${{ job.services.mysql.ports[3306] }}
                 TEST_SITE_TABLE_PREFIX: "wp_"
@@ -165,7 +165,7 @@ jobs:
                 TEST_SITE_ADMIN_PASSWORD: "password"
                 TEST_DB_NAME: ${{ job.services.mysql.env.MYSQL_DATABASE }}
                 TEST_DB_HOST: "127.0.0.1"
-                TEST_DB_USER: ${{ job.services.mysql.env.MYSQL_USER }}
+                TEST_DB_USER: "admin"
                 TEST_DB_PASSWORD: ${{ job.services.mysql.env.MYSQL_PASSWORD }}
                 TEST_DB_PORT: ${{ job.services.mysql.ports[3306] }}
 
