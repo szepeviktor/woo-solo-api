@@ -73,7 +73,9 @@ jobs:
             mysql:
               image: mysql:5.7
               env:
-                MYSQL_ROOT_PASSWORD: root
+                MYSQL_DATABASE: wordpresstest
+                MYSQL_USER: admin
+                MYSQL_PASSWORD: password
               ports:
                 - 3306:3306
               options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -156,7 +158,6 @@ jobs:
                 TEST_DB_USER: "root"
                 TEST_DB_PASSWORD: "password"
                 TEST_DB_PORT: "3306"
-
 
             - name: Run integration tests
               run: composer test:integration
