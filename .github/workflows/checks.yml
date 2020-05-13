@@ -140,15 +140,7 @@ jobs:
             - name: Set up WordPress instance so that we can run tests
               run: |
                 sudo systemctl start mysql
-                mysql --host $TEST_DB_HOST --port $TEST_DB_PORT -u $TEST_DB_USER -p$TEST_DB_PASSWORD -e 'SHOW DATABASES;'
-                cd .. && mkdir wp && cd wp
-                curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-                chmod +x wp-cli.phar
-                sudo mv wp-cli.phar /usr/local/bin/wp
-                wp core download
-                wp config create --dbname=$TEST_DB_NAME --dbhost=$TEST_DB_HOST:$TEST_DB_PORT --dbuser=$TEST_DB_USER --dbpass=$TEST_DB_PASSWORD
-                wp core install --url=$TEST_SITE_WP_URL --title=Test --admin_user=$TEST_SITE_ADMIN_USERNAME --admin_password=$TEST_SITE_ADMIN_PASSWORD --admin_email=$TEST_SITE_ADMIN_EMAIL
-                yes | cp .env.actions.testing .env.testing
+                mysql --host 127.0.0.1 --port 3306 -u admin -ppassword -e 'SHOW DATABASES;'
               env:
                 WP_ROOT_FOLDER: "/var/www/html"
                 TEST_SITE_WP_ADMIN_PATH: "/wp-admin"
