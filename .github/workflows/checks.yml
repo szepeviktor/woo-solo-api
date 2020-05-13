@@ -139,6 +139,7 @@ jobs:
             # Setup WordPress so that we can run tests
             - name: Set up WordPress instance so that we can run tests
               run: |
+                sudo systemctl start mysql
                 cd .. && mkdir wp && cd wp
                 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
                 chmod +x wp-cli.phar
