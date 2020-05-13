@@ -9,9 +9,7 @@
 
 declare(strict_types=1);
 
-
 namespace MadeByDenis\WooSoloApi\Assets;
-
 
 /**
  * Class EnqueueResources
