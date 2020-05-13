@@ -31,7 +31,9 @@ jobs:
               id: composer-cache
               run: |
                 echo "::set-output name=dir::$(composer config cache-files-dir)"
-            - uses: actions/cache@v1
+
+            - name: Cache Composer Dependencies
+              uses: actions/cache@v1
               with:
                 path: ${{ steps.composer-cache.outputs.dir }}
                 key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -71,11 +73,10 @@ jobs:
             mysql:
                 image: mysql:5.7
                 ports:
-                    - 3306
+                    - 3306:3306
                 volumes:
                     - $HOME/mysql:/var/lib/mysql
                 env:
-                    MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
                     MYSQL_DATABASE: "wordpresstest"
                     MYSQL_USER: "root"
                     MYSQL_PASSWORD: "password"
@@ -106,6 +107,19 @@ jobs:
                   ${{ runner.OS }}-build-
                   ${{ runner.OS }}-
 
+            - name: Get Composer Cache Directory
+              id: composer-cache
+              run: |
+                echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+            - name: Cache Composer Dependencies
+              uses: actions/cache@v1
+              with:
+                path: ${{ steps.composer-cache.outputs.dir }}
+                key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+                restore-keys: |
+                  ${{ runner.os }}-composer-
+
             - name: Install composer packages
               run: composer install --no-progress
 
@@ -134,7 +148,7 @@ jobs:
                 TEST_SITE_DB_HOST: "127.0.0.1"
                 TEST_SITE_DB_USER: "root"
                 TEST_SITE_DB_PASSWORD: "password"
-                TEST_SITE_DB_PORT: "33306"
+                TEST_SITE_DB_PORT: "3306"
                 TEST_SITE_TABLE_PREFIX: "wp_"
                 TEST_TABLE_PREFIX: "wp_"
                 TEST_SITE_WP_URL: "http://wordpress.test"
@@ -146,7 +160,7 @@ jobs:
                 TEST_DB_HOST: "127.0.0.1"
                 TEST_DB_USER: "root"
                 TEST_DB_PASSWORD: "password"
-                TEST_DB_PORT: "33306"
+                TEST_DB_PORT: "3306"
 
 
             - name: Run integration tests
