@@ -5,7 +5,7 @@ on: [push, pull_request]
         branches: [master, develop]
     push:
         branches: [master]
-        
+
 jobs:
     phpcs_check:
         name: PHPCS check on PHP ${{ matrix.php }}
@@ -120,12 +120,12 @@ jobs:
               with:
                 node-version: 14
 
-            - name: Copy .env.testing
-              run: yes | cp .env.actions.testing .env.testing
-
             - name: Check directories
               run: |
                   ls -all
                   pwd
+
+            - name: Copy .env.testing
+              run: yes | cp .env.actions.testing .env.testing
 
 
