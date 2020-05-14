@@ -126,6 +126,8 @@ jobs:
                   pwd
                   cd .. && cd ..
                   ls -all
+                  cd _temp
+                  ls -all
 
             - name: Copy .env.testing
               run: yes | cp .env.actions.testing .env.testing
