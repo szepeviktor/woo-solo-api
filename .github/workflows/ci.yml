@@ -110,6 +110,6 @@ jobs:
               uses: actions/checkout@v2
 
             - name: exec into the container
-              run: docker exec -it ${{ jobs.tests.container.name }} bash && ls
+              run: docker exec -it ${{ job.tests.container.name }} bash && ls
 
 
