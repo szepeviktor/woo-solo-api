@@ -92,7 +92,7 @@ jobs:
             ports:
                 - 8080:80
             volumes:
-                - wordpress:/var/www/html/:rw
+                - /__w/woo-solo-api/woo-solo-api:/var/www/html/wp-content/plugins/:rw
             options: --cpus 2
 
         services:
@@ -109,27 +109,7 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v2
 
-            - name: PHP setup
-              uses: shivammathur/setup-php@v2
-              with:
-                php-version: 7.2
-                coverage: pcov
-
-            - name: Set Node.js version
-              uses: actions/setup-node@v1
-              with:
-                node-version: 14
-
-            - name: Check directories
-              run: |
-                  ls -all
-                  pwd
-                  cd .. && cd ..
-                  ls -all
-                  cd _temp
-                  ls -all
-
-            - name: Copy .env.testing
-              run: yes | cp .env.actions.testing .env.testing
+            - name: exec into the container
+              run: docker exec -it ${{ jobs.tests.container.name }} bash && ls
 
 
