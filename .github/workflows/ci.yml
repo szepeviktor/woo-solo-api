@@ -124,6 +124,8 @@ jobs:
               run: |
                   ls -all
                   pwd
+                  cd .. && cd ..
+                  ls -all
 
             - name: Copy .env.testing
               run: yes | cp .env.actions.testing .env.testing
