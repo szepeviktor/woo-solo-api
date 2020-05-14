@@ -1,7 +1,11 @@
 name: Continuous integration checks
 
 on: [push, pull_request]
-
+    pull_request:
+        branches: [master, develop]
+    push:
+        branches: [master]
+        
 jobs:
     phpcs_check:
         name: PHPCS check on PHP ${{ matrix.php }}
