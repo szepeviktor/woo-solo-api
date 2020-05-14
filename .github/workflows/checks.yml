@@ -88,6 +88,7 @@ jobs:
                     WORDPRESS_DB_NAME: wordpresstest
                 ports:
                     - 8080:80
+                options: -v /__w/woo-solo-api/woo-solo-api:/var/www/html/:rw
 
         steps:
             - name: Checkout
@@ -105,7 +106,7 @@ jobs:
                 node-version: 14
 
             - name: Start WordPress
-              run:  docker run --name test-wordpress -p 8081:80 -d wordpress
+              run: docker run --name test-wordpress -p 8081:80 -d wordpress
 
             - name: Copy .env.testing
               run: yes | cp .env.actions.testing .env.testing
