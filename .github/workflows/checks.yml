@@ -107,6 +107,9 @@ jobs:
             - name: Start WordPress
               run:  docker run --name test-wordpress -p 8081:80 -d wordpress
 
+            - name: Copy .env.testing
+              run: yes | cp .env.actions.testing .env.testing
+
             - name: Cache node modules
               uses: actions/cache@v1
               with:
