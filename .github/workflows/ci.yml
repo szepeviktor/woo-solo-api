@@ -55,6 +55,19 @@ jobs:
                 php-version: 7.2
                 coverage: pcov
 
+            - name: Get composer cache directory
+              id: composer-cache
+              run: |
+                echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+            - name: Cache composer dependencies
+              uses: actions/cache@v1
+              with:
+                path: ${{ steps.composer-cache.outputs.dir }}
+                key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+                restore-keys: |
+                  ${{ runner.os }}-composer-
+
             - name: Install composer packages
               run: composer install --no-progress
 
@@ -73,10 +86,7 @@ jobs:
                     MYSQL_DATABASE: wordpresstest
                 ports:
                     - 3306
-                options: |
-                  --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-                  -v mysql:/var/lib/mysql
-
+                options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
             wordpress:
                 image: wordpress:5.4.1-php7.2
