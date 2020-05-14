@@ -78,6 +78,19 @@ jobs:
         name: Integration tests
         runs-on: ubuntu-latest
 
+        container:
+            image: wordpress:5.4.1-php7.2
+            env:
+                WORDPRESS_DB_HOST: mysql
+                WORDPRESS_DB_USER: admin
+                WORDPRESS_DB_PASSWORD: ""
+                WORDPRESS_DB_NAME: wordpresstest
+            ports:
+                - 8080:80
+            volumes:
+                - wordpress:/var/www/html/:rw
+            options: --cpus 2
+
         services:
             mysql:
                 image: mysql:5.7
@@ -87,17 +100,6 @@ jobs:
                 ports:
                     - 3306
                 options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-
-            wordpress:
-                image: wordpress:5.4.1-php7.2
-                env:
-                    WORDPRESS_DB_HOST: mysql
-                    WORDPRESS_DB_USER: admin
-                    WORDPRESS_DB_PASSWORD: ""
-                    WORDPRESS_DB_NAME: wordpresstest
-                ports:
-                    - 8080:80
-                options: -v wordpress:/var/www/html/:rw
 
         steps:
             - name: Checkout
@@ -113,9 +115,6 @@ jobs:
               uses: actions/setup-node@v1
               with:
                 node-version: 14
-
-            - name: Start WordPress
-              run: docker run --name test-wordpress -p 8081:80 -d ${{ job.services.wordpress }}
 
             - name: Copy .env.testing
               run: yes | cp .env.actions.testing .env.testing
