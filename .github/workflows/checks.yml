@@ -105,7 +105,7 @@ jobs:
                 node-version: 14
 
             - name: Start WordPress
-              run:  docker run --name test-wordpress -p 8080:80 -d wordpress
+              run:  docker run --name test-wordpress -p 8081:80 -d wordpress
 
             - name: Cache node modules
               uses: actions/cache@v1
