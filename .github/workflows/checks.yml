@@ -69,16 +69,32 @@ jobs:
         name: Integration tests
         runs-on: ubuntu-latest
 
+        services:
+            mysql:
+                image: mysql:5.7
+                env:
+                    MYSQL_ALLOW_EMPTY_PASSWORD: yes
+                    MYSQL_DATABASE: wordpresstest
+                ports:
+                    - 3306
+                options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+            wordpress:
+                image: wordpress:5.4.1-php7.2
+                env:
+                    WORDPRESS_DB_HOST: mysql
+                    WORDPRESS_DB_USER: admin
+                    WORDPRESS_DB_PASSWORD: ""
+                    WORDPRESS_DB_NAME: wordpresstest
+                ports:
+                    - 8080:80
+
         steps:
             - name: Checkout
               uses: actions/checkout@v2
 
-            - name: Run tests
-              uses: dingo-d/plugin-test-action@v1.0.5
-              with:
-                wp-db-name: 'wordpresstest'
-                wp-db-user: 'admin'
-                wp-db-pass: 'password'
-                wp-user: 'admin'
-                wp-pass: 'password'
+            - name: Run test
+              run: |
+                  ls -all
+                  pwd
 
