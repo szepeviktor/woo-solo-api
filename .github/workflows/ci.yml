@@ -1,10 +1,6 @@
-name: Run code quality checks
+name: Continuous integration checks
 
-on:
-    pull_request:
-        branches: [master, develop]
-    push:
-        branches: [master]
+on: [push, pull_request]
 
 jobs:
     phpcs_check:
@@ -77,7 +73,10 @@ jobs:
                     MYSQL_DATABASE: wordpresstest
                 ports:
                     - 3306
-                options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+                options: |
+                  --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+                  -v mysql:/var/lib/mysql
+
 
             wordpress:
                 image: wordpress:5.4.1-php7.2
@@ -88,7 +87,7 @@ jobs:
                     WORDPRESS_DB_NAME: wordpresstest
                 ports:
                     - 8080:80
-                options: -v /__w/woo-solo-api/woo-solo-api:/var/www/html/:rw
+                options: -v wordpress:/var/www/html/:rw
 
         steps:
             - name: Checkout
